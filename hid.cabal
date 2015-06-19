@@ -1,7 +1,7 @@
 name:                hid
 version:             0.1.0.0
 synopsis:            Interface to hidapi library
--- description:         
+description:         Requires both hidapi-hidraw and hidapi-libusb.
 license:             BSD3
 license-file:        LICENSE
 author:              Dimitri Sabadie <dimitri.sabadie@gmail.com>
@@ -10,8 +10,13 @@ copyright:           Dimitri Sabadie
 category:            System
 build-type:          Simple
 
--- extra-source-files:  
-cabal-version:       >=1.10
+extra-source-files:  CHANGELOG.md
+
+cabal-version:       >= 1.10
+
+source-repository head
+  type:     git
+  location: git://github.com/phaazon/hid.git
 
 flag stdcall {
   description: Use the stdcall call convention
