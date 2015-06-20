@@ -1,7 +1,7 @@
 name:                hid
-version:             0.2
+version:             0.2.1
 synopsis:            Interface to hidapi library
-description:         Requires both hidapi-hidraw and hidapi-libusb.
+description:         Requires both hidapi-libusb.
 license:             BSD3
 license-file:        LICENSE
 author:              Dimitri Sabadie <dimitri.sabadie@gmail.com>
@@ -44,8 +44,7 @@ library
                      , bytestring   >= 0.10 && < 0.11
                      , transformers >= 0.4  && < 0.5
 
-  pkgconfig-depends:   hidapi-hidraw
-                     , hidapi-libusb
+  pkgconfig-depends:   hidapi-libusb
 
   hs-source-dirs:      src
 
