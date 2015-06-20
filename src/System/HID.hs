@@ -60,6 +60,9 @@ import System.HID.Internal.Functions
 import System.HID.Internal.Types
 import System.HID.Internal.Utils
 
+maxReadBytes :: Int 
+maxReadBytes = 524288
+
 -- |Initialize the library.
 --
 -- This function initializes the library. Calling it is not strictly
@@ -192,79 +195,79 @@ sendFeatureReport dev bs = liftIO . fmap fromIntegral $
 -- Input reports are returned to the host through the INTERRUPT IN endpoint.
 -- The first byte will contain the Report number if the device uses numbered
 -- reports.
-readInputReport :: (MonadIO m) => Device -> Word32 -> m (Maybe (BS.ByteString,Word32))
-readInputReport dev bytesToRead = liftIO $ do
+readInputReport :: (MonadIO m) => Device -> m (Maybe BS.ByteString)
+readInputReport dev = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    allocaBytes (fromIntegral bytesToRead) $ \inputData -> do
-      r <- hidRead hidDev inputData (fromIntegral bytesToRead)
-      if r == -1 then
+    allocaBytes maxReadBytes $ \inputData -> do
+      r <- hidRead hidDev inputData (fromIntegral maxReadBytes)
+      if r < 0 then
         pure Nothing
         else do
-          bs <- fmap (BS.pack) $ peekArray (fromIntegral bytesToRead) (castPtr inputData)
-          pure $ Just (bs,fromIntegral r)
+          bs <- fmap (BS.pack) $ peekArray (fromIntegral r) (castPtr inputData)
+          pure $ Just bs
 
 -- |Read an Input report from a HID device with timeout.
 --
 -- Input reports are returned to the host through the INTERRUPT IN endpoint.
 -- The first byte will contain the Report number if the device uses numbered
 -- reports.
-readInputReportTimeout :: (MonadIO m) => Device -> Word32 -> Int -> m (Maybe (BS.ByteString,Word32))
-readInputReportTimeout dev bytesToRead tms = liftIO $ do
+readInputReportTimeout :: (MonadIO m) => Device -> Int -> m (Maybe BS.ByteString)
+readInputReportTimeout dev tms = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    allocaBytes (fromIntegral bytesToRead) $ \inputData -> do
-      r <- hidReadTimeout hidDev inputData (fromIntegral bytesToRead) (fromIntegral tms)
-      if r == -1 then
+    allocaBytes maxReadBytes $ \inputData -> do
+      r <- hidReadTimeout hidDev inputData (fromIntegral maxReadBytes) (fromIntegral tms)
+      if r < 0 then
         pure Nothing
         else do
-          bs <- fmap (BS.pack) $ peekArray (fromIntegral bytesToRead) (castPtr inputData)
-          pure $ Just (bs,fromIntegral r)
+          bs <- fmap (BS.pack) $ peekArray (fromIntegral r) (castPtr inputData)
+          pure $ Just bs
 
 -- |Get a feature report from a HID device.
 --
 -- Set the first byte of data to the Report ID of the report to be read. Make
 -- sure to allow space for this extra byte in data. Upon return, the first byte
 -- will still contain the Report ID, and the report data will start in data[1].
-getFeatureReport :: (MonadIO m) => Device -> Word32 -> m (Maybe (BS.ByteString,Word32))
-getFeatureReport dev bytesToRead = liftIO $ do
+getFeatureReport :: (MonadIO m) => Device -> m (Maybe BS.ByteString)
+getFeatureReport dev = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    allocaBytes (fromIntegral bytesToRead) $ \inputData -> do
-      r <- hidGetFeatureReport hidDev inputData (fromIntegral bytesToRead)
-      if r == -1 then
+    allocaBytes maxReadBytes $ \inputData -> do
+      r <- hidGetFeatureReport hidDev inputData (fromIntegral maxReadBytes)
+      if r < 0 then
         pure Nothing
         else do
-          bs <- fmap (BS.pack) $ peekArray (fromIntegral bytesToRead) (castPtr inputData)
-          pure $ Just (bs,fromIntegral r)
+          bs <- fmap (BS.pack) $ peekArray (fromIntegral r) (castPtr inputData)
+          pure $ Just bs
 
 -- |Get the manufacturer string from a HID device. 
 getManufacturer :: (MonadIO m) => Device -> m String
 getManufacturer dev = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    withCWString (replicate 2048 '\0') $ \inputData -> do
-      _ <- hidGetManufacturerString hidDev inputData 2048
+    withCWString (replicate maxReadBytes '\0') $ \inputData -> do
+      _ <- hidGetManufacturerString hidDev inputData (fromIntegral maxReadBytes)
       peekCWString inputData
 
 -- |Get the product name from a HID device. 
 getProductName :: (MonadIO m) => Device -> m String
 getProductName dev = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    withCWString (replicate 2048 '\0') $ \inputData -> do
-      _ <- hidGetProductString hidDev inputData 2048
+    withCWString (replicate maxReadBytes '\0') $ \inputData -> do
+      _ <- hidGetProductString hidDev inputData (fromIntegral maxReadBytes)
       peekCWString inputData
 
 -- |Get the serial number string from a HID device. 
 getSerialNumber :: (MonadIO m) => Device -> m String
 getSerialNumber dev = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    withCWString (replicate 2048 '\0') $ \inputData -> do
-      _ <- hidGetSerialNumberString hidDev inputData 2048
+    withCWString (replicate maxReadBytes '\0') $ \inputData -> do
+      _ <- hidGetSerialNumberString hidDev inputData (fromIntegral maxReadBytes)
       peekCWString inputData
 
 -- |Get an indexed string from a HID device. 
 getIndexedString :: (MonadIO m) => Device -> Int -> m String
 getIndexedString dev index = liftIO $ do
   withForeignPtr (unDevice dev) $ \hidDev ->
-    withCWString (replicate 2048 '\0') $ \inputData -> do
-      _ <- hidGetIndexedString hidDev (fromIntegral index) inputData 2048
+    withCWString (replicate maxReadBytes '\0') $ \inputData -> do
+      _ <- hidGetIndexedString hidDev (fromIntegral index) inputData (fromIntegral maxReadBytes)
       peekCWString inputData
 
 -- |Set the blocking mode of a device.
