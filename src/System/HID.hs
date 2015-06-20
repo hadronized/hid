@@ -45,6 +45,8 @@ module System.HID (
   , getIndexedString
     -- * Blocking mode for devices
   , setBlocking
+    -- * Getting errors
+  , getError
   ) where
 
 import Control.Monad.IO.Class
@@ -277,3 +279,8 @@ setBlocking :: (MonadIO m) => Device -> Bool -> m Bool
 setBlocking dev blocking = liftIO $
   withForeignPtr (unDevice dev) $ \hidDev ->
     fmap fromHIDRet $ hidSetNonblocking hidDev (fromBool $ not blocking)
+
+-- |Get last error.
+getError :: (MonadIO m) => Device -> m String
+getError dev = liftIO $ withForeignPtr (unDevice dev) $ \hidDev ->
+  hidError hidDev >>= peekCWString
