@@ -14,16 +14,18 @@ module System.HID (
   , exit
     -- * Getting devices information
   , DeviceInfo
-  , devPath
-  , devVendorID
-  , devProductID
-  , devSerialNumber
-  , devReleaseNumber
-  , devManufacturerString
-  , devProductString
-  , devUsagePage
-  , devUsage
-  , devInterfaceNumber
+      (
+        devPath
+      , devVendorID
+      , devProductID
+      , devSerialNumber
+      , devReleaseNumber
+      , devManufacturerString
+      , devProductString
+      , devUsagePage
+      , devUsage
+      , devInterfaceNumber
+      )
   , enumerate
   , detectDevices
     -- * Accessing devices
