@@ -1,5 +1,5 @@
 name:                hid
-version:             0.1.0.0
+version:             0.2
 synopsis:            Interface to hidapi library
 description:         Requires both hidapi-hidraw and hidapi-libusb.
 license:             BSD3
@@ -7,6 +7,7 @@ license-file:        LICENSE
 author:              Dimitri Sabadie <dimitri.sabadie@gmail.com>
 maintainer:          Dimitri Sabadie <dimitri.sabadie@gmail.com>
 copyright:           Dimitri Sabadie
+bug-reports:         https://github.com/phaazon/hid/issues
 category:            System
 build-type:          Simple
 
@@ -27,9 +28,9 @@ library
   ghc-options:         -W -Wall
 
   if flag(stdcall)
-    cpp-options: -DCALLCV=stdcall
+    cpp-options:       -DCALLCV=stdcall
   else
-    cpp-options: -DCALLCV=ccall
+    cpp-options:       -DCALLCV=ccall
 
   exposed-modules:     System.HID
 
@@ -39,9 +40,9 @@ library
 
   default-extensions:  CPP
 
-  build-depends:       base >= 4.8 && < 4.9
-                     , bytestring >= 0.10 && < 0.11
-                     , transformers >= 0.4 && < 0.5
+  build-depends:       base         >= 4.8  && < 4.9
+                     , bytestring   >= 0.10 && < 0.11
+                     , transformers >= 0.4  && < 0.5
 
   pkgconfig-depends:   hidapi-hidraw
                      , hidapi-libusb
