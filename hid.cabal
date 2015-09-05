@@ -1,7 +1,10 @@
 name:                hid
-version:             0.2.1
+version:             0.2.1.1
 synopsis:            Interface to hidapi library
-description:         Requires both hidapi-libusb.
+description:         Requires the hidapi-libusb C API and pkg-config.
+                     .
+                     For information
+                     <https://github.com/signal11/hidapi/tree/master/libusb here>
 license:             BSD3
 license-file:        LICENSE
 author:              Dimitri Sabadie <dimitri.sabadie@gmail.com>
