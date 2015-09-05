@@ -10,6 +10,7 @@ license-file:        LICENSE
 author:              Dimitri Sabadie <dimitri.sabadie@gmail.com>
 maintainer:          Dimitri Sabadie <dimitri.sabadie@gmail.com>
 copyright:           Dimitri Sabadie
+homepage:            https://github.com/phaazon/hid
 bug-reports:         https://github.com/phaazon/hid/issues
 category:            System
 build-type:          Simple
